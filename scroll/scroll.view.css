@@ -1,0 +1,32 @@
+[mol_scroll] {
+	display: block;
+	overflow: auto;
+	flex: 1 1 auto;
+	align-self: stretch;
+	box-sizing: border-box;
+	will-change: scroll-position;
+	transform: translateZ(0);
+	box-shadow: var(--mol_skin_light_outline);
+	max-height: 100%;
+	max-width: 100%;
+	-webkit-overflow-scrolling: touch;
+}
+
+[mol_scroll] > * {
+	transform: translateZ(0);
+}
+
+@media print {
+	[mol_scroll] {
+		overflow: visible;
+	}
+}
+
+[mol_scroll_strut] {
+	position: absolute;
+	display: block;
+	padding: 1px;
+	margin: -1px;
+	z-index: 0; 
+	transition: none;
+}
