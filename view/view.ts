@@ -27,13 +27,13 @@ namespace $ {
 		}
 		
 		title() : string {
-			return this.Class().toString()
+			return this.constructor.toString()
 		}
 		
 		@ $mol_mem
 		focused( next?: boolean ) {
 			let node = this.dom_node()
-			const value = $mol_view_selection.focused( next === undefined ? undefined : next ? [ node ] : [] )
+			const value = $mol_view_selection.focused( next === undefined ? undefined : next ? [ node ] : [] ) || []
 			return value.indexOf( node ) !== -1
 		} 
 		
@@ -168,7 +168,12 @@ namespace $ {
 			
 			$mol_dom_render_attributes( node , this.attr() )
 			$mol_dom_render_styles( node , this.style() )
-			$mol_dom_render_fields( node , this.field() )
+			
+			const fields = this.field()
+			$mol_dom_render_fields( node , fields )
+			new $mol_defer( ()=> $mol_dom_render_fields( node , fields ) )
+
+			if( this.object_host() === this.constructor ) this.$.$mol_dom_context.document.title = this.title()			
 		}
 
 		@ $mol_mem
@@ -189,11 +194,11 @@ namespace $ {
 		
 		view_names_owned() {
 			const names = [] as string[]
-			const owner = this.object_owner()
+			let owner = this.object_host()
 
 			if( owner instanceof $mol_view ) {
 
-				const suffix = this.object_field().replace( /\(.*/ , '' )
+				const suffix = this.object_field()
 				const suffix2 = '_' + suffix[0].toLowerCase() + suffix.substring(1)
 				
 				for( let Class of ( owner.constructor as typeof $mol_view ).view_classes() ) {
